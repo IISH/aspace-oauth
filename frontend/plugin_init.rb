@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# Force-inject the gem's lib path into the JRuby runtime lookup tree
+gem_lib_path = File.expand_path("../gems/gems/omniauth_openid_connect-0.8.0/lib", __FILE__)
+$LOAD_PATH.unshift(gem_lib_path) unless $LOAD_PATH.include?(gem_lib_path)
+
+require 'omniauth_openid_connect' 
+
 require "omniauth"
 require "omniauth/rails_csrf_protection"
 require "omniauth-saml"

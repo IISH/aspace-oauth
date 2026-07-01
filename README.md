@@ -9,6 +9,32 @@ Strategies tested:
 - Developer [built-in for testing]
 - [SAML](https://github.com/omniauth/omniauth-saml)
 
+## IISG configuratie
+
+Voor de openid provisioning is een aparte library nodig. Daarom in Gemfile:
+
+    # Deze gebruikt archivesspace
+    gem 'uri', '0.12.2'
+    # Deze strategie hebben we nodig voor de OpenID
+    gem 'omniauth_openid_connect', '~> 0.8.0', require: false
+
+Onze OpenID provider geeft twee claims: sub en email. Dat is niet genoeg voor de mapping. Daarom in frontend/controllers/oauth_controller.rb:
+
+    # Match everything before the first dot, and everything after it
+      if (match = username.match(/^([^.]+)\.(.+)$/))
+        info[:first_name] = match[1]
+        info[:last_name] = match[2].split('.').map(&:capitalize).join(' ')
+      else
+        info[:first_name] = username.capitalize
+        info[:last_name] = username.capitalize
+      end
+      
+      info[:name] = username.split('.').map(&:capitalize).join(' ')
+
+Om de plugin uit te rusten met de gem files, is deze opdracht een maal nodig. Dit maakt een gems folder aan in de plugin/aspace-oauth folder met daarin de noodzakelijke openid bibliotheek. In de backend of frontend container:
+
+    archivesspace/scripts/initialize-plugin.sh aspace-oauth
+
 ## Overview
 
 Enabling this plugin will:

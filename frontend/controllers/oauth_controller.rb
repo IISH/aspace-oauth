@@ -27,6 +27,21 @@ class OauthController < ApplicationController
       username = username.split("@").first unless AspaceOauth.username_is_email?
       info[:username] = username.downcase # checked in backend
       info[:email] = email # ensure email is set in info
+
+      # Match everything before the first dot, and everything after it
+      if (match = username.match(/^([^.]+)\.(.+)$/))
+        info[:first_name] = match[1]
+        info[:last_name] = match[2].split('.').map(&:capitalize).join(' ')
+      else
+        info[:first_name] = username.capitalize
+        info[:last_name] = username.capitalize
+      end
+      
+      info[:name] = username.split('.').map(&:capitalize).join(' ')
+      info[:phone] = 'na'
+      info[:additional_contact] = 'na'
+
+
       login_token = AspaceOauth.encode_user_login_token(auth_hash)
 
       backend_session = User.login(username, login_token)
