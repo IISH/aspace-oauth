@@ -33,7 +33,12 @@ Onze OpenID provider geeft twee claims: sub en email. Dat is niet genoeg voor de
 
 Om de plugin uit te rusten met de gem files, is deze opdracht een maal nodig. Dit maakt een gems folder aan in de plugin/aspace-oauth folder met daarin de noodzakelijke openid bibliotheek. In de backend of frontend container:
 
-    archivesspace/scripts/initialize-plugin.sh aspace-oauth
+    DEBUG_RESOLVER=1 \
+    JARS_SKIP=true \
+    _JAVA_OPTIONS="-Djava.net.preferIPv4Stack=true" \
+    ./initialize-plugin.sh aspace-oauth
+
+Deze opdracht werkt alleen als de plugins/aspace-auth dezelfde gebruiker en lees rechten heeft als de user die bovenstaand script draait.
 
 ## Overview
 
